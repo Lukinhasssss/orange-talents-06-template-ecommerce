@@ -17,6 +17,11 @@ public class CategoryRequest {
     @CheckIfIdExists(domainClass = Category.class, fieldName = "id", message = "Não existe categoria com esse id")
     private Long idMotherCategory;
 
+    public CategoryRequest(String name, Long idMotherCategory) {
+        this.name = name;
+        this.idMotherCategory = idMotherCategory;
+    }
+
     public String getName() {
         return name;
     }
