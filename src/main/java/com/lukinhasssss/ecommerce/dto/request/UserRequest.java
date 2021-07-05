@@ -23,7 +23,6 @@ public class UserRequest {
         return password;
     }
 
-
     public User convertToEntity(BCryptPasswordEncoder passwordEncoder) {
         return new User(login, passwordEncoder.encode(password));
     }
