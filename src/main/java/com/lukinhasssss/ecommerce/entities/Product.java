@@ -7,6 +7,7 @@ import java.math.BigDecimal;
 import java.time.Instant;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Entity
 @Table(name = "tb_product")
@@ -33,21 +34,25 @@ public class Product {
     private Category category;
 
     @ManyToOne
-    private User user;
+    private User owner;
 
     @OneToMany(mappedBy = "product", cascade = CascadeType.PERSIST)
     private Set<ProductCharacteristics> characteristics = new HashSet<>();
 
-    private Product() {}
+    @OneToMany(mappedBy = "product", cascade = CascadeType.MERGE, fetch = FetchType.EAGER) // Quando atualizar o produto também vai atualizar as imagens
+    private Set<ProductImage> images = new HashSet<>();
 
-    public Product(String name, BigDecimal value, Integer availableQuantity, String description, Category category, Set<ProductCharacteristicsRequest> productCharacteristicsRequest, User user) {
+    @Deprecated
+    public Product() {}
+
+    public Product(String name, BigDecimal value, Integer availableQuantity, String description, Category category, Set<ProductCharacteristicsRequest> productCharacteristicsRequest, User owner) {
         this.name = name;
         this.value = value;
         this.availableQuantity = availableQuantity;
         this.description = description;
         this.category = category;
         productCharacteristicsRequest.forEach(request -> this.characteristics.add(request.toEntity(this)));
-        this.user = user;
+        this.owner = owner;
     }
 
     public Long getId() {
@@ -80,5 +85,13 @@ public class Product {
 
     public Set<ProductCharacteristics> getCharacteristics() {
         return characteristics;
+    }
+
+    public boolean isUserOwner(User user) {
+        return user.getId().equals(owner.getId());
+    }
+
+    public void addImages(Set<String> links) {
+        this.images.addAll(links.stream().map(link -> new ProductImage(link, this)).collect(Collectors.toSet()));
     }
 }
