@@ -11,6 +11,16 @@ public class QuestionRequest {
     @NotBlank
     private String title;
 
+    public QuestionRequest() {}
+
+    public QuestionRequest(String title) {
+        this.title = title;
+    }
+
+    public QuestionRequest(Question question) {
+        this.title = question.getTitle();
+    }
+
     public String getTitle() {
         return title;
     }

@@ -17,7 +17,7 @@ public class ProductCharacteristics {
     private String description;
 
     @NotNull
-    @ManyToOne()
+    @ManyToOne
     private Product product;
 
     @Deprecated
@@ -29,4 +29,19 @@ public class ProductCharacteristics {
         this.product = product;
     }
 
+    public Long getId() {
+        return id;
+    }
+
+    public Product getProduct() {
+        return product;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getDescription() {
+        return description;
+    }
 }

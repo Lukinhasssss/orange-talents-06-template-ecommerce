@@ -4,6 +4,7 @@ import com.lukinhasssss.ecommerce.dto.request.AddProductImagesRequest;
 import com.lukinhasssss.ecommerce.dto.request.OpinionRequest;
 import com.lukinhasssss.ecommerce.dto.request.QuestionRequest;
 import com.lukinhasssss.ecommerce.dto.request.RegisterProductRequest;
+import com.lukinhasssss.ecommerce.dto.response.ProductDetailsResponse;
 import com.lukinhasssss.ecommerce.entities.Opinion;
 import com.lukinhasssss.ecommerce.entities.Product;
 import com.lukinhasssss.ecommerce.entities.Question;
@@ -99,6 +100,16 @@ public class ProductController {
         questionRepository.save(question);
         sendEmail.sendEmail(user);
         return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/{productId}")
+    public ResponseEntity<ProductDetailsResponse> getProduct(@PathVariable Long productId) {
+        Optional<Product> product = productRepository.findById(productId);
+
+        if (product.isEmpty())
+            return ResponseEntity.notFound().build();
+
+        return ResponseEntity.ok().body(new ProductDetailsResponse(product.get()));
     }
 
 }

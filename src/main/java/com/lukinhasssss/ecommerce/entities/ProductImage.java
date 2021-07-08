@@ -18,8 +18,12 @@ public class ProductImage {
     private String url;
 
     @NotNull
-    @ManyToOne(optional = false)
+    @ManyToOne
     private Product product;
+
+    public String getUrl() {
+        return url;
+    }
 
     @Deprecated
     public ProductImage() {}
