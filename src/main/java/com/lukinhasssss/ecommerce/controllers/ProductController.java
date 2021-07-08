@@ -2,13 +2,17 @@ package com.lukinhasssss.ecommerce.controllers;
 
 import com.lukinhasssss.ecommerce.dto.request.AddProductImagesRequest;
 import com.lukinhasssss.ecommerce.dto.request.OpinionRequest;
+import com.lukinhasssss.ecommerce.dto.request.QuestionRequest;
 import com.lukinhasssss.ecommerce.dto.request.RegisterProductRequest;
 import com.lukinhasssss.ecommerce.entities.Opinion;
 import com.lukinhasssss.ecommerce.entities.Product;
+import com.lukinhasssss.ecommerce.entities.Question;
 import com.lukinhasssss.ecommerce.entities.User;
 import com.lukinhasssss.ecommerce.repositories.CategoryRepository;
 import com.lukinhasssss.ecommerce.repositories.OpinionRepository;
 import com.lukinhasssss.ecommerce.repositories.ProductRepository;
+import com.lukinhasssss.ecommerce.repositories.QuestionRepository;
+import com.lukinhasssss.ecommerce.utils.email.SendEmailFake;
 import com.lukinhasssss.ecommerce.utils.upload.FakeUploader;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -27,12 +31,16 @@ public class ProductController {
     private CategoryRepository categoryRepository;
     private FakeUploader fakeUploader;
     private OpinionRepository opinionRepository;
+    private QuestionRepository questionRepository;
+    private SendEmailFake sendEmail;
 
-    public ProductController(ProductRepository productRepository, CategoryRepository categoryRepository, FakeUploader fakeUploader, OpinionRepository opinionRepository) {
+    public ProductController(ProductRepository productRepository, CategoryRepository categoryRepository, FakeUploader fakeUploader, OpinionRepository opinionRepository, QuestionRepository questionRepository, SendEmailFake sendEmail) {
         this.productRepository = productRepository;
         this.categoryRepository = categoryRepository;
         this.fakeUploader = fakeUploader;
         this.opinionRepository = opinionRepository;
+        this.questionRepository = questionRepository;
+        this.sendEmail = sendEmail;
     }
 
     @PostMapping
@@ -76,4 +84,21 @@ public class ProductController {
         opinionRepository.save(opinion);
         return ResponseEntity.ok().build();
     }
+
+    @PostMapping("/{productId}/questions")
+    public ResponseEntity<Void> insertQuestions(@PathVariable Long productId, @RequestBody @Valid QuestionRequest request, @AuthenticationPrincipal User user) {
+        if (user == null)
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+
+        Optional<Product> product = productRepository.findById(productId);
+
+        if (product.isEmpty())
+            return ResponseEntity.notFound().build();
+
+        Question question = request.convertToEntity(product.get(), user);
+        questionRepository.save(question);
+        sendEmail.sendEmail(user);
+        return ResponseEntity.ok().build();
+    }
+
 }
