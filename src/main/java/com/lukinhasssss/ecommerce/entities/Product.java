@@ -131,4 +131,12 @@ public class Product {
     public <T> Set<T> mapImages(Function<ProductImage, T> mapFunction){
         return this.images.stream().map(mapFunction).collect(Collectors.toSet());
     }
+
+    public boolean canShotDownPurchase(Integer quantity){
+        if(availableQuantity >= quantity){
+            availableQuantity -= quantity;
+            return true;
+        }
+        return false;
+    }
 }
