@@ -116,8 +116,7 @@ public class Product {
     }
 
     public Double getAverageNotes() {
-        Integer sumOfAllNotes = this.opinions.stream().map(Opinion::getNote).mapToInt(i -> i).sum();
-        return (double) (sumOfAllNotes / this.getTotalOpinions());
+        return this.opinions.stream().map(Opinion::getNote).collect(Collectors.averagingInt(i -> i));
     }
 
     public boolean isUserOwner(User user) {

@@ -4,6 +4,6 @@ import com.lukinhasssss.ecommerce.entities.User;
 
 public interface EmailSender {
 
-    void sendEmail(User user);
+    void sendEmail(String message);
 
 }

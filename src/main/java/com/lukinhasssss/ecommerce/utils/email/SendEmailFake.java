@@ -7,11 +7,11 @@ import org.springframework.stereotype.Component;
 public class SendEmailFake implements EmailSender {
 
     @Override
-    public void sendEmail(User user) {
+    public void sendEmail(String message) {
         /*
-            Envia email pro login do usuário
+            Envia email
          */
-        System.out.println("Email enviado para " + user.getLogin());
+        System.out.println(message);
     }
 
 }

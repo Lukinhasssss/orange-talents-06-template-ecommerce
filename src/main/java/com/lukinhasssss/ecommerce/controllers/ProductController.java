@@ -98,7 +98,7 @@ public class ProductController {
 
         Question question = request.convertToEntity(product.get(), user);
         questionRepository.save(question);
-        sendEmail.sendEmail(user);
+        sendEmail.sendEmail("Email send to " + user.getLogin());
         return ResponseEntity.ok().build();
     }
 

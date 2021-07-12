@@ -41,7 +41,7 @@ public class PurchaseController {
             Purchase purchase = request.convertToEntity(productRepository, user);
             purchaseRepository.save(purchase);
 
-            sendEmailFake.sendEmail(user);
+            sendEmailFake.sendEmail("Email send to " + user.getLogin());
             return ResponseEntity.status(HttpStatus.FOUND).body(purchase.getPaymentGateway().getUrl(purchase.getId()));
         }
 
